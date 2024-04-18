@@ -2,8 +2,10 @@ package com.pitang.services;
 
 import com.pitang.models.UserModel;
 import com.pitang.repositories.UserRepository;
-import com.pitang.utis.ErrorsException;
+import com.pitang.utis.CryptoUtil;
+import com.pitang.utis.ErrorMessagesConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,17 +18,29 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private CarService carService;
+    CryptoUtil cryptoUtil;
 
     public UserModel create(UserModel userModel) {
         try {
+            userModel.setPassword(cryptoUtil.hashPassword(userModel.getPassword()));
             return this.userRepository.save(userModel);
-        } catch (Exception e) {
-            throw new ErrorsException(e.getMessage(), 1);
+        } catch (DataIntegrityViolationException de) {
+            if (de.getMessage().contains(ErrorMessagesConstants.UK_LOGIN.getError())) {
+                throw new RuntimeException(ErrorMessagesConstants.UK_LOGIN.getMessage());
+            } else if (de.getMessage().contains(ErrorMessagesConstants.UK_EMAIL.getError())) {
+                throw new RuntimeException(ErrorMessagesConstants.UK_EMAIL.getMessage());
+            } else if (de.getMessage().contains(ErrorMessagesConstants.NULL.getError())) {
+                throw new RuntimeException(ErrorMessagesConstants.NULL.getMessage());
+            }
         }
+        return null;
     }
 
     public UserModel update(UserModel userModel) {
+        if (this.cryptoUtil.isNotHashPassword(userModel.getPassword())) {
+            userModel.setPassword(cryptoUtil.hashPassword(userModel.getPassword()));
+        }
+
         return this.userRepository.save(userModel);
     }
 
@@ -41,5 +55,13 @@ public class UserService {
     @Transactional
     public void delete(Long id) {
         this.userRepository.deleteById(id);
+    }
+
+    public UserModel findByLogin(String login) {
+        try {
+            return this.userRepository.findByLogin(login);
+        } catch (Exception e) {
+            throw new RuntimeException(ErrorMessagesConstants.LOGIN_NOT_VALID_USER_PASSWORD.getMessage());
+        }
     }
 }

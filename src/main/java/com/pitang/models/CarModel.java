@@ -39,6 +39,9 @@ public class CarModel {
     @Column(name = "color", nullable = false)
     private String color;
 
+    @Column(name = "used")
+    private Integer used = 0;
+
     @Column(name = "user_id")
     private Long userId;
 }

@@ -11,5 +11,5 @@ public interface UserRepository extends JpaRepository<UserModel, Long> {
     @NotNull
     UserModel getById(@NotNull Long aLong);
 
-    UserModel findByEmail(String email);
+    UserModel findByLogin(String login);
 }

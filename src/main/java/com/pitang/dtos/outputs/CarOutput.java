@@ -12,6 +12,8 @@ import lombok.Setter;
 
 public class CarOutput {
 
+    private Long id;
+
     private Integer year;
 
     private String licensePlate;
@@ -20,5 +22,5 @@ public class CarOutput {
 
     private String color;
 
-    private Long userId;
+    private Integer used;
 }
