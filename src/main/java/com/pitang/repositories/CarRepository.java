@@ -13,6 +13,6 @@ public interface CarRepository extends JpaRepository<CarModel, Long> {
     @NotNull
     CarModel getById(@NotNull Long aLong);
 
-    List<CarModel> findAllByUserIdOrderByUsedDesc(Long userId);
+    List<CarModel> findAllByUserIdOrderByUsedDescLicensePlateDesc(Long userId);
 
 }

@@ -9,7 +9,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,8 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -39,13 +36,10 @@ public class LoginService {
     private final CryptoUtil cryptoUtil;
     private final UserService userService;
 
-    private final ModelMapper modelMapper;
-
     @Autowired
     public LoginService(CryptoUtil cryptoUtil, UserService userService) {
         this.cryptoUtil = cryptoUtil;
         this.userService = userService;
-        this.modelMapper = new ModelMapper();
     }
 
     public UserModel login(String login, String credentials) {

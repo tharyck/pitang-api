@@ -1,6 +1,5 @@
 package com.pitang.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,13 +9,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serial;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "tb_user")
 @Entity
 public class UserModel {
@@ -65,5 +64,8 @@ public class UserModel {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id")
-    private List<CarModel> cars;
+    private List<CarModel> cars = new ArrayList<>();
+
+    @Transient
+    private Integer usedCounter = 0;
 }

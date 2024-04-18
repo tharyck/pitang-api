@@ -36,4 +36,5 @@ public class UserOutput {
 
     private List<CarOutput> cars;
 
+    private Integer usedCounter;
 }

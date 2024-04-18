@@ -1,14 +1,20 @@
 package com.pitang.services;
 
+import com.pitang.models.CarModel;
 import com.pitang.models.UserModel;
 import com.pitang.repositories.UserRepository;
 import com.pitang.utis.CryptoUtil;
 import com.pitang.utis.ErrorMessagesConstants;
+import org.modelmapper.internal.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -49,7 +55,9 @@ public class UserService {
     }
 
     public List<UserModel> index() {
-        return this.userRepository.findAll().stream().toList();
+        Sort sort = (Sort.by(new Sort.Order(Sort.Direction.DESC, "login")));
+        List<UserModel> users = this.userRepository.findAll(sort).stream().toList();
+        return countUsed(users);
     }
 
     @Transactional
@@ -64,4 +72,13 @@ public class UserService {
             throw new RuntimeException(ErrorMessagesConstants.LOGIN_NOT_VALID_USER_PASSWORD.getMessage());
         }
     }
+
+    private List<UserModel> countUsed(List<UserModel> users) {
+        users.forEach(user -> {
+            user.getCars().forEach(car -> user.setUsedCounter(user.getUsedCounter() + car.getUsed()));
+            user.getCars().sort(Comparator.comparing(CarModel::getUsed).reversed());
+        });
+        return users.stream().sorted(Comparator.comparing(UserModel::getUsedCounter).reversed()).toList();
+    }
+
 }

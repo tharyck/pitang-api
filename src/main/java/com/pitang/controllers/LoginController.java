@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,7 +55,7 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorOutput(HttpStatus.UNAUTHORIZED.value(), re.getMessage()));
         }
     }
-    @PostMapping(RestConstants.ME_URI)
+    @GetMapping(RestConstants.ME_URI)
     @ApiOperation(value = "Show Logged User")
     public ResponseEntity<?> autenticatedUser() {
         UserModel user = loginService.getUserByToken();

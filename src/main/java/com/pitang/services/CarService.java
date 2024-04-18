@@ -33,7 +33,7 @@ public class CarService {
     }
 
     public List<CarModel> index(Long userId) {
-        return this.carRepository.findAllByUserIdOrderByUsedDesc(userId).stream().toList();
+        return this.carRepository.findAllByUserIdOrderByUsedDescLicensePlateDesc(userId).stream().toList();
     }
 
     @Transactional
